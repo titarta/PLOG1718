@@ -69,3 +69,19 @@ ite(_, _, Else):- Else.
 
 it(If, Then):- If, !, Then.
 it(_,_).
+
+
+
+
+
+askInteger(Prompt, Min, Max, Option) :-
+														write(Prompt),
+														read(Value),
+														integer(Value),
+														Value >= Min,
+														Value =< Max,
+														Option = Value.
+
+askInteger(Prompt, Min, Max, Option) :-
+														nl, write('Wrong input. Try again.'),nl,nl,
+														askInteger(Prompt, Min, Max, Option).

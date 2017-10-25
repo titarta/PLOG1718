@@ -36,11 +36,7 @@ movePiece(Piece, Row, Col, Board, NewBoard) :-
 				combine(CurrentPiece, Piece, NewPiece),
 				setMatrixElemAtWith(Row, Col, NewPiece, Board, NewBoard).
 
-movePiece(_, Row, Col, Board, Board) :-
-				getMatrixElemAt(Row, Col, Board, CurrentPiece),
-				level(CurrentPiece, CurPieceHeight),
-				\+ CurPieceHeight < 2,
-				write('nao da para jogar a peca'), nl.
+movePiece(_, Row, Col, Board, Board) :- fail.
 
 
 
@@ -57,7 +53,6 @@ initialBoard([
 
 initialGame(Game) :- initialBoard(Board),
 					Game = [Board, 8, 8, 8].
-
 
 
 
@@ -171,16 +166,87 @@ update(X, Y, NewX, NewY) :- (Y == 1 -> NewY is -1, NewX is X + 1;
 
 
 
-startGame :- initialBoard(Board).
+startGame(List) :- initialGame(Game),
+									 gameLoop(Game, List, List, 1).
+
+
+gameLoop([Board|GamePieces], [CurrPlayer|NextPlayers], Players, PlayerNum) :-
+
+
+					%CurrPlayer = p,
+					printBoard([Board|GamePieces]),
+					\+ gameWin(NewBoard),
+					playerTurn([Board|GamePieces], PlayerNum, [NewBoard|NewStock]),
+
+					ite(NextPlayers == [], NewPlayerNum is 1, NewPlayerNum is PlayerNum + 1),
+					ite(NextPlayers == [],
+					gameLoop([NewBoard|NewStock], Players, Players, NewPlayerNum),
+					gameLoop([NewBoard|NewStock], NextPlayers, Players, NewPlayerNum)).
+
+gameLoop(Game, _, _, Num) :-
+					nl, nl,
+					write('Congratulations Player '), write(Num), write('. You won the game!').
 
 
 
-player1turn(Board) :-
-					printBoard(Board),
-					write('Player one: choose piece').
 
 
 
+playerTurn([Board| PiecesStock], Num, NewGame) :-
+																		nl, write('Player '), write(Num),write(' turn:'),nl,
+																		askPiece(Piece, PiecesStock),
+																		askCoords(Y, X),
+																		movePiece(Piece, Y, X, Board, NewBoard),
+																		updateStock(Piece, PiecesStock,NewStock),
+																		NewGame = [NewBoard| NewStock].
+
+
+playerTurn([Board| PiecesStock], Num, NewGame) :-
+																		nl, write('Unable to place piece, try again.'), nl,
+																		playerturn([Board| PiecesStock], Num, NewGame).
+
+
+
+askPiece(Piece, PiecesStock) :-
+														nl,
+														write('   '), printCelTop(n1h), write('   '), printCelTop(n1p), write('   '), printCelTop(n2h), write('   '), printCelTop(n2p), nl,
+														write(' 1-'), printCelInt(n1h), write(' 2-'), printCelInt(n1p), write(' 3-'), printCelInt(n2h), write(' 4-'), printCelInt(n2p), nl,
+														write('   '), printCelBot(n1h), write('   '), printCelBot(n1p), write('   '), printCelBot(n2h), write('   '), printCelBot(n2p), nl,
+														write('     1             1             2             2'),nl,nl,
+														askInteger('Choose your piece: ', 1, 4, Option),
+														checkStock(Option, PiecesStock),
+														getPiece(Option, Piece).
+
+
+askPiece(Piece, PiecesStock) :-
+						nl, write('Piece out of stock, choose another one.'), nl,
+						askPiece(Piece, PiecesStock).
+
+
+askCoords(Y, X) :-
+								nl, write('Choose the coordinates:'), nl, nl,
+								askInteger('X= ', 0, 3, X),
+								askInteger('Y= ', 0, 3, Y).
+
+
+getPiece(1, n1h).
+getPiece(2, n1p).
+getPiece(3, n2h).
+getPiece(4, n2p).
+
+checkStock(1, [0,_,_]) :- fail.
+checkStock(2, [_,0,_]) :- fail.
+checkStock(3, [_,_,0]) :- fail.
+checkStock(4, [_,_,0]) :- fail.
+checkStock(_,_).
+
+updateStock(n1h, [K,A,B], [NewK,A,B]) :- NewK is K - 1.
+updateStock(n1p, [A,K,B], [A,NewK,B]) :- NewK is K - 1.
+updateStock(n2h, [A,B,K], [A,B,NewK]) :- NewK is K - 1.
+updateStock(n2p, [A,B,K], [A,B,NewK]) :- NewK is K - 1.
+
+
+t :- askPiece(_,_).
 
 %%% Unit testing %%%
 
@@ -228,17 +294,17 @@ print :- initialBoard(B),
 
 %32
 printBoard([Board, HoledPieces, PlainPieces, DualPieces | T]) :-
-					write('            '), put_code(201),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(187), nl,
+					write('            '), put_code(201),printLineDivision,put_code(203),printLineDivision,put_code(203),printLineDivision,put_code(203),printLineDivision,put_code(187), nl,
 					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186),write('  Remaining holed single pieces: '), write(HoledPieces), nl,
 					write('     y'), put_code(92), write('x    '), put_code(186), write('     0     '), put_code(186), write('     1     '), put_code(186), write('     2     '), put_code(186), write('     3     '), put_code(186), write('  Remaining plain single pieces: '), write(PlainPieces), nl,
 					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('  Remaining dual pieces: '), write(DualPieces), nl,
-					put_code(201),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(185), nl,
+					put_code(201),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
 					getListElemAt(0, Board, Array0),
 					printLine(0, Array0, 0), nl,
-					put_code(204),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(185), nl,
+					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
 					getListElemAt(1, Board, Array1),
 					printLine(0, Array1, 1), nl,
-					put_code(204),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(185), nl,
+					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
 					getListElemAt(2, Board, Array2),
 					printLine(0, Array2, 2), nl,
 					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
