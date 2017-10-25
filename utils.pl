@@ -57,3 +57,15 @@ setListElemAtWith(I, Elem, [H|L], [H|ResL]):-
 	I > 0,
 	I1 is I-1,
 	setListElemAtWith(I1, Elem, L, ResL).
+
+
+
+
+not(X) :- X, !, fail.
+not(X).
+
+ite(If, Then, _):- If, !, Then.
+ite(_, _, Else):- Else.
+
+it(If, Then):- If, !, Then.
+it(_,_).

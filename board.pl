@@ -1,3 +1,7 @@
+:- use_module(library(lists)).
+:- include('utils.pl').
+
+
 level(empty, 0).
 level(n1h, 1).
 level(n2h, 2).
@@ -32,11 +36,11 @@ movePiece(Piece, Row, Col, Board, NewBoard) :-
 				combine(CurrentPiece, Piece, NewPiece),
 				setMatrixElemAtWith(Row, Col, NewPiece, Board, NewBoard).
 
-movePiece(Piece, Row, Col, Board, Board) :-
+movePiece(_, Row, Col, Board, Board) :-
 				getMatrixElemAt(Row, Col, Board, CurrentPiece),
 				level(CurrentPiece, CurPieceHeight),
 				\+ CurPieceHeight < 2,
-				write('nao da para jogar a peca').
+				write('nao da para jogar a peca'), nl.
 
 
 
@@ -51,7 +55,8 @@ initialBoard([
 			[empty, empty, empty, empty],
 			[empty, empty, empty, empty]]).
 
-
+initialGame(Game) :- initialBoard(Board),
+					Game = [Board, 8, 8, 8].
 
 
 
@@ -64,114 +69,108 @@ initialBoard([
 
 %%%%%%% Test Winning the game %%%%%%%%
 
-gameWin(Board) :- getMatrixElemAt(0,0,Board, Elem1), getMatrixElemAt(0,1,Board, Elem2), getMatrixElemAt(0,2,Board, Elem3), getMatrixElemAt(0,3,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(1,0,Board, Elem1), getMatrixElemAt(1,1,Board, Elem2), getMatrixElemAt(1,2,Board, Elem3), getMatrixElemAt(1,3,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(2,0,Board, Elem1), getMatrixElemAt(0,1,Board, Elem2), getMatrixElemAt(2,2,Board, Elem3), getMatrixElemAt(2,3,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(3,0,Board, Elem1), getMatrixElemAt(3,1,Board, Elem2), getMatrixElemAt(3,2,Board, Elem3), getMatrixElemAt(3,3,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(0,0,Board, Elem1), getMatrixElemAt(1,0,Board, Elem2), getMatrixElemAt(2,0,Board, Elem3), getMatrixElemAt(3,0,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(0,1,Board, Elem1), getMatrixElemAt(1,1,Board, Elem2), getMatrixElemAt(2,1,Board, Elem3), getMatrixElemAt(3,1,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(0,2,Board, Elem1), getMatrixElemAt(1,2,Board, Elem2), getMatrixElemAt(2,2,Board, Elem3), getMatrixElemAt(3,2,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(0,3,Board, Elem1), getMatrixElemAt(1,3,Board, Elem2), getMatrixElemAt(2,3,Board, Elem3), getMatrixElemAt(3,3,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(0,0,Board, Elem1), getMatrixElemAt(1,1,Board, Elem2), getMatrixElemAt(2,2,Board, Elem3), getMatrixElemAt(3,3,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-gameWin(Board) :- getMatrixElemAt(0,3,Board, Elem1), getMatrixElemAt(1,2,Board, Elem2), getMatrixElemAt(2,1,Board, Elem3), getMatrixElemAt(3,0,Board, Elem4),
-									test4Line(Elem1, Elem2, Elem3, Elem4).
-
-
-
-
-test4Line(Elem1, Elem2, Elem3, Elem4) :- level(Elem1, ElemLv),
-										 level(Elem2, ElemLv),
-										 level(Elem3, ElemLv),
-										 level(Elem4, ElemLv),
-										 ElemLv \== 0.
-
-test4Line(Elem1, Elem2, Elem3, Elem4) :- type(Elem1, ElemType),
-										 type(Elem2, ElemType),
-										 type(Elem3, ElemType),
-										 type(Elem4, ElemType),
-										 ElemType \== none.
-
+gameWin(Board) :- checkWinWthRows(Board).
+gameWin(Board) :- transpose(Board, Tboard), checkWinWthRows(Tboard).
+gameWin(Board) :- checkWinWthDiagonal(Board).
+gameWin(Board) :- reverse(Board, Rboard), checkWinWthDiagonal(Rboard).
 gameWin(Board) :- checkWinWthStairs(Board, Board, 0).
 
-checkWinWthStairs(Board, [H|T], X) :-
-							checkLineForStairs(Board, H, X, 0),
-							NewX is X + 1,
-							checkWinWthStairs(Board, T, NewX).
-							
-checkLineForStairs(Board, [H|T], X, Y) :-
+
+checkWinWthRows([]) :- fail.
+checkWinWthRows([H|T]) :- testLine(H); checkWinWthRows(T).
+
+testLine(List) :- testLevel(List); testType(List).
+testLevel([_]).
+testLevel([A,B|T]) :- level(A, ElemLv),
+					   level(B, ElemLv),
+					   ElemLv \= 0,
+					   testLevel([B|T]).
+testType([_]).
+testType([A,B|T]) :- type(A, ElemType),
+					   type(B, ElemType),
+					   ElemType \= none,
+					   testType([B|T]).
+
+
+
+checkWinWthDiagonal(Board) :- getBoardDiagonal(Board, 0, Diagonal),
+															testLine(Diagonal).
+
+getBoardDiagonal([],_,[]).
+getBoardDiagonal([F|T],Num, [E|Diagonal]) :- getListElemAt(Num, F, Elem),
+											E = Elem,
+											getBoardDiagonal(T, Num + 1, Diagonal).
+
+
+checkWinWthStairs(_,[],_) :-!, fail.
+checkWinWthStairs(Board, [H|T], Y) :-
+							checkLineForStairs(Board, H, Y, 0);
+							NewY is Y + 1,
+							checkWinWthStairs(Board, T, NewY).
+
+checkLineForStairs(_, [], _, _) :- fail.
+checkLineForStairs(Board, [H|T], Y, X) :-
 										level(H, LvH),
-										(LvH == 3 ->
-										checkStairs(Board, X, Y, -1, -1)),
-										NewY is Y + 1,
-										checkLineForStairs(Board, T, X, Y).
+										LvH == 3,
+										checkStairs(Board, Y, X, -1, -1).
 
-checkStairs(Board, X, Y, VarX, VarY) :-
-									VarX == 0,
+checkLineForStairs(Board, [H|T], Y, X) :-
+																			NewX is X + 1,
+																			checkLineForStairs(Board, T, Y, NewX).
+
+checkStairs(Board, Y, X, VarY, VarX) :-
 									VarY == 0,
-									checkStairs(Board, X, Y, 0, 1).
-									
-checkStairs(Board, X, Y, VarX, VarY) :-
-									NewX is X + VarX,
+									VarX == 0,
+									checkStairs(Board, Y, X, 0, 1).
+
+checkStairs(Board, Y, X, VarY, VarX) :-
 									NewY is Y + VarY,
-									\+ checkGoodPos(NewX, NewY),
-									update(VarX, VarY, NewVarX, NewVarY),
-									checkStairs(Board, X, Y, NewVarX, NewVarY).
-									
-									
-checkStairs(Board, X, Y, VarX, VarY) :-
 									NewX is X + VarX,
-									NewY is Y + VarY,
-									getMatrixElemAt(NewX, NewY, Board, Elem),
-									level(Elem, ElemLv),
-									(ElemLv == 2 ->
-									checkForLv1(Board, X, Y, VarX, VarY)),
-									update(VarX, VarY, NewVarX, NewVarY),
-									checkStairs(Board, X, Y, NewVarX, NewVarY).
-									
-									
-checkForLv1(Board, X, Y, VarX, VarY) :-
-									NewX is X + VarX + VarX,
-									NewY is Y + VarY + VarY,
-									checkGoodPos(NewX, NewY),
-									getMatrixElemAt(NewX, NewY, Board, Elem),
-									level(Elem, ElemLv),
-									Elem1Lv == 1 .
+									\+ checkGoodPos(NewY, NewX),
+									update(VarY, VarX, NewVarY, NewVarX),
+									checkStairs(Board, Y, X, NewVarY, NewVarX).
 
 
-checkGoodPos(X, Y) :- X =< 3, X >= 0, Y =< 3, Y >= 0.	
+checkStairs(Board, Y, X, VarY, VarX) :-
+									NewY = Y + VarY,
+									NewX = X + VarX,
+									getMatrixElemAt(NewY, NewX, Board, Elem),
+									level(Elem, ElemLv),
+									ElemLv == 2,
+								 checkForLv1(Board, Y, X, VarY, VarX).
+
+
+checkStairs(Board, Y, X, VarY, VarX) :-
+									 									NewY = Y + VarY,
+									 									NewX = X + VarX,
+																		update(VarY, VarX, NewVarY, NewVarX),
+								 									  checkStairs(Board, Y, X, NewVarY, NewVarX).
+
+
+checkForLv1(Board, Y, X, VarY, VarX) :-
+									NewY = Y + VarY + VarY,
+									NewX = X + VarX + VarX,
+									checkGoodPos(NewY, NewX),
+									getMatrixElemAt(NewY, NewX, Board, Elem),
+									level(Elem, ElemLv),
+									ElemLv == 1 .
+
+
+checkGoodPos(Y, X) :- X =< 3, X >= 0, Y =< 3, Y >= 0.
 
 update(1, 1, _, _) :- !, fail.
-									
 update(X, Y, NewX, NewY) :- (Y == 1 -> NewY is -1, NewX is X + 1;
 							NewY is Y + 1, NewX is X).
-									
-									
-									
-									
-									
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-									
-									
-									
-									
+
+
+
+
 startGame :- initialBoard(Board).
 
 
@@ -192,13 +191,13 @@ teste1 :- initialBoard(Board),
 		movePiece(n2h, 0, 2, Board2, Board3),
 		movePiece(n1p, 0, 3, Board3, Board4),
 		gameWin(Board4).
-			
+
 teste2 :- initialBoard(Board),
 		movePiece(n2h, 0, 0, Board, Board1),
 		movePiece(n2h, 0, 1, Board1, Board2),
 		movePiece(n2h, 0, 2, Board2, Board3),
 		gameWin(Board3).
-		
+
 teste3 :- initialBoard(Board),
 		movePiece(n1h, 0, 0, Board, Board1),
 		movePiece(n2h, 0, 0, Board1, Board2),
@@ -214,20 +213,25 @@ teste3 :- initialBoard(Board),
 
 
 
-print :- initialBoard(Board), movePiece(n2h, 1, 1, Board, NewBoard),
-			movePiece(n2p, 0, 1, NewBoard, NewBoard1),
-			movePiece(n1h, 2, 2, NewBoard1, NewBoard2),
-			movePiece(n1h, 3, 1, NewBoard2, NewBoard3),
-			movePiece(n2p, 3, 1, NewBoard3, NewBoard4),
-			movePiece(n1p, 3, 3, NewBoard4, NewBoard5),
-			movePiece(n2h, 1, 2, NewBoard5, NewBoard6),printBoard(NewBoard6).
+print :- initialBoard(B),
+			movePiece(n1h, 1, 1, B, B0),
+			movePiece(n2h, 1, 1, B0, B1),
+			movePiece(n2h, 0, 2, B1, B2),
+			movePiece(n2h, 2, 2, B2, B3),
+			movePiece(n1p, 1, 3, B3, B4),
+			movePiece(n1p, 3, 3, B4, B5),
+
+			Game = [B5, 6, 5, 1],
+			printBoard(Game),
+			gameWin(B5).
 
 
-
-printBoard(Board) :- write('            '), put_code(201),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(187), nl,
-					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), nl,
-					write('     y'), put_code(92), write('x    '), put_code(186), write('     0     '), put_code(186), write('     1     '), put_code(186), write('     2     '), put_code(186), write('     3     '), put_code(186), nl,
-					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), nl,
+%32
+printBoard([Board, HoledPieces, PlainPieces, DualPieces | T]) :-
+					write('            '), put_code(201),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(203),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(187), nl,
+					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186),write('  Remaining holed single pieces: '), write(HoledPieces), nl,
+					write('     y'), put_code(92), write('x    '), put_code(186), write('     0     '), put_code(186), write('     1     '), put_code(186), write('     2     '), put_code(186), write('     3     '), put_code(186), write('  Remaining plain single pieces: '), write(PlainPieces), nl,
+					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('  Remaining dual pieces: '), write(DualPieces), nl,
 					put_code(201),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(185), nl,
 					getListElemAt(0, Board, Array0),
 					printLine(0, Array0, 0), nl,
@@ -237,10 +241,10 @@ printBoard(Board) :- write('            '), put_code(201),put_code(205),put_code
 					put_code(204),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(185), nl,
 					getListElemAt(2, Board, Array2),
 					printLine(0, Array2, 2), nl,
-					put_code(204),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(206),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(185), nl,
+					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
 					getListElemAt(3, Board, Array3),
 					printLine(0, Array3, 3), nl,
-					put_code(200),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(202),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(202),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(202),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(202),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(188).
+					put_code(200),printLineDivision,put_code(202),printLineDivision,put_code(202),printLineDivision,put_code(202),printLineDivision,put_code(202),printLineDivision,put_code(188).
 
 
 printLine(Line, Array, Value) :- Line == 0,
@@ -311,3 +315,5 @@ printCelInt(Elem) :- Elem \== empty,
 					type(Elem, ElemType),
 					ElemType == plain,
 					write('   '), put_code(179), write('   '), put_code(179), write('   ').
+
+printLineDivision :- put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205).
