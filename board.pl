@@ -320,23 +320,23 @@ print :- initialBoard(B),
 
 %32
 printBoard([Board, HoledPieces, PlainPieces, DualPieces]) :-
-					write('            '), put_code(201),printLineDivision,put_code(203),printLineDivision,put_code(203),printLineDivision,put_code(203),printLineDivision,put_code(187), nl,
-					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186),write('  Remaining holed single pieces: '), write(HoledPieces), nl,
-					write('     y'), put_code(92), write('x    '), put_code(186), write('     0     '), put_code(186), write('     1     '), put_code(186), write('     2     '), put_code(186), write('     3     '), put_code(186), write('  Remaining plain single pieces: '), write(PlainPieces), nl,
-					write('            '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('  Remaining dual pieces: '), write(DualPieces), nl,
-					put_code(201),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
+					write('            '), put_code(9556),printLineDivision,put_code(9574),printLineDivision,put_code(9574),printLineDivision,put_code(9574),printLineDivision,put_code(9559), nl,
+					write('            '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553),write('  Remaining holed single pieces: '), write(HoledPieces), nl,
+					write('     y/x    '), put_code(9553), write('     0     '), put_code(9553), write('     1     '), put_code(9553), write('     2     '), put_code(9553), write('     3     '), put_code(9553), write('  Remaining plain single pieces: '), write(PlainPieces), nl,
+					write('            '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('  Remaining dual pieces: '), write(DualPieces), nl,
+					put_code(9556),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9571), nl,
 					getListElemAt(0, Board, Array0),
 					printLine(0, Array0, 0), nl,
-					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
+					put_code(9568),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9571), nl,
 					getListElemAt(1, Board, Array1),
 					printLine(0, Array1, 1), nl,
-					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
+					put_code(9568),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9571), nl,
 					getListElemAt(2, Board, Array2),
 					printLine(0, Array2, 2), nl,
-					put_code(204),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(206),printLineDivision,put_code(185), nl,
+					put_code(9568),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9580),printLineDivision,put_code(9571), nl,
 					getListElemAt(3, Board, Array3),
 					printLine(0, Array3, 3), nl,
-					put_code(200),printLineDivision,put_code(202),printLineDivision,put_code(202),printLineDivision,put_code(202),printLineDivision,put_code(202),printLineDivision,put_code(188).
+					put_code(9562),printLineDivision,put_code(9577),printLineDivision,put_code(9577),printLineDivision,put_code(9577),printLineDivision,put_code(9577),printLineDivision,put_code(9565).
 
 
 printLine(Line, Array, Value) :- Line == 0,
@@ -344,7 +344,7 @@ printLine(Line, Array, Value) :- Line == 0,
 
 printLine(Line, Array, Value) :-
 					Line == 1,
-					put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), write('           '), put_code(186), nl,
+					put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), write('           '), put_code(9553), nl,
 					printLine(2, Array, Value).
 
 printLine(Line, Array, Value) :-
@@ -353,7 +353,7 @@ printLine(Line, Array, Value) :-
 					getListElemAt(1, Array, Elem2),
 					getListElemAt(2, Array, Elem3),
 					getListElemAt(3, Array, Elem4),
-					put_code(186), write('           '),put_code(186), printCelTop(Elem1), put_code(186), printCelTop(Elem2), put_code(186), printCelTop(Elem3), put_code(186), printCelTop(Elem4), put_code(186), nl,
+					put_code(9553), write('           '),put_code(9553), printCelTop(Elem1), put_code(9553), printCelTop(Elem2), put_code(9553), printCelTop(Elem3), put_code(9553), printCelTop(Elem4), put_code(9553), nl,
 					printLine(3,Array, Value).
 
 printLine(Line, Array, Value) :-
@@ -362,7 +362,7 @@ printLine(Line, Array, Value) :-
 					getListElemAt(1, Array, Elem2),
 					getListElemAt(2, Array, Elem3),
 					getListElemAt(3, Array, Elem4),
-					put_code(186), write('     '), write(Value), write('     '),put_code(186), printCelInt(Elem1), put_code(186), printCelInt(Elem2), put_code(186), printCelInt(Elem3), put_code(186), printCelInt(Elem4), put_code(186), nl,
+					put_code(9553), write('     '), write(Value), write('     '),put_code(9553), printCelInt(Elem1), put_code(9553), printCelInt(Elem2), put_code(9553), printCelInt(Elem3), put_code(9553), printCelInt(Elem4), put_code(9553), nl,
 					printLine(4,Array).
 
 printLine(Line, Array) :-
@@ -371,7 +371,7 @@ printLine(Line, Array) :-
 					getListElemAt(1, Array, Elem2),
 					getListElemAt(2, Array, Elem3),
 					getListElemAt(3, Array, Elem4),
-					put_code(186), write('           '),put_code(186), printCelBot(Elem1), put_code(186), printCelBot(Elem2), put_code(186), printCelBot(Elem3), put_code(186), printCelBot(Elem4), put_code(186), nl,
+					put_code(9553), write('           '),put_code(9553), printCelBot(Elem1), put_code(9553), printCelBot(Elem2), put_code(9553), printCelBot(Elem3), put_code(9553), printCelBot(Elem4), put_code(9553), nl,
 					printLine(5,Array).
 
 printLine(Line, Array) :-
@@ -380,20 +380,20 @@ printLine(Line, Array) :-
 					getListElemAt(1, Array, Elem2),
 					getListElemAt(2, Array, Elem3),
 					getListElemAt(3, Array, Elem4),
-					put_code(186), write('           '),put_code(186), write(' '), level(Elem1, Elem1Lv), write(Elem1Lv), write('         '), put_code(186), write(' '), level(Elem2, Elem2Lv), write(Elem2Lv), write('         '), put_code(186), write(' '), level(Elem3, Elem3Lv), write(Elem3Lv), write('         '), put_code(186), write(' '), level(Elem4, Elem4Lv), write(Elem4Lv), write('         '), put_code(186).
+					put_code(9553), write('           '),put_code(9553), write(' '), level(Elem1, Elem1Lv), write(Elem1Lv), write('         '), put_code(9553), write(' '), level(Elem2, Elem2Lv), write(Elem2Lv), write('         '), put_code(9553), write(' '), level(Elem3, Elem3Lv), write(Elem3Lv), write('         '), put_code(9553), write(' '), level(Elem4, Elem4Lv), write(Elem4Lv), write('         '), put_code(9553).
 
 
 printCelTop(Elem) :- Elem == empty,
 					write('           ').
 
 printCelTop(Elem) :- Elem \== empty,
-					write('   '), put_code(218), put_code(196), put_code(196), put_code(196), put_code(191), write('   ').
+					write('   '), put_code(9484), put_code(9472), put_code(9472), put_code(9472), put_code(9488), write('   ').
 
 printCelBot(Elem) :- Elem == empty,
 					write('           ').
 
 printCelBot(Elem) :- Elem \== empty,
-					write('   '), put_code(192), put_code(196), put_code(196), put_code(196), put_code(217), write('   ').
+					write('   '), put_code(9492), put_code(9472), put_code(9472), put_code(9472), put_code(9496), write('   ').
 
 printCelInt(Elem) :- Elem == empty,
 					write('           ').
@@ -401,11 +401,11 @@ printCelInt(Elem) :- Elem == empty,
 printCelInt(Elem) :- Elem \== empty,
 					type(Elem, ElemType),
 					ElemType == hole,
-					write('   '), put_code(179), write(' O '), put_code(179), write('   ').
+					write('   '), put_code(9474), write(' '), put_code(9675), write(' '), put_code(9474), write('   ').
 
 printCelInt(Elem) :- Elem \== empty,
 					type(Elem, ElemType),
 					ElemType == plain,
-					write('   '), put_code(179), write('   '), put_code(179), write('   ').
+					write('   '), put_code(9474), write('   '), put_code(9474), write('   ').
 
-printLineDivision :- put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205),put_code(205).
+printLineDivision :- put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552),put_code(9552).
