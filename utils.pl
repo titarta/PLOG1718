@@ -62,7 +62,7 @@ setListElemAtWith(I, Elem, [H|L], [H|ResL]):-
 
 
 not(X) :- X, !, fail.
-not(X).
+not(_).
 
 ite(If, Then, _):- If, !, Then.
 ite(_, _, Else):- Else.
