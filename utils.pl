@@ -70,6 +70,9 @@ ite(_, _, Else):- Else.
 it(If, Then):- If, !, Then.
 it(_,_).
 
+ie(If, _):- If.
+ie(_, Else) :- Else.
+
 
 
 
@@ -85,3 +88,33 @@ askInteger(Prompt, Min, Max, Option) :-
 askInteger(Prompt, Min, Max, Option) :-
 														nl, write('Wrong input. Try again.'),nl,nl,
 														askInteger(Prompt, Min, Max, Option).
+
+filter(Pred, [], []) :- !.
+
+filter(Pred, [ListElem|List], [ListElem|Elems]) :-
+		aplica(Pred,[ListElem]),
+		filter(Pred, List, Elems).
+
+filter(Pred, [L|H] , NewL) :-
+		filter(Pred, H, NewL).
+
+aplica(P,LArgs) :- G =.. [P|LArgs], G.
+
+
+len([], LenResult):-
+    LenResult is 0.
+
+len([X|Y], LenResult):-
+    len(Y, L),
+    LenResult is L + 1.
+
+
+sum_list([], 0).
+sum_list([H|T], Sum) :-
+	 sum_list(T, Rest),
+	 Sum is H + Rest.
+
+
+
+toInt(Value, IntValue) :-
+	IntValue is round(Value).

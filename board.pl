@@ -1,5 +1,6 @@
 :- use_module(library(lists)).
 :- use_module(library(random)).
+:- use_module(library(system)).
 :- include('utils.pl').
 :- include('ai.pl').
 :- include('unitTesting.pl').
@@ -173,14 +174,16 @@ update(X, Y, NewX, NewY) :- (Y == 1 -> NewY is -1, NewX is X + 1;
 
 
 
-startGame(List) :- initialGame(Game),
+startGame(List) :- now(X),
+									 setrand(X),
+									 initialGame(Game),
 									 gameLoop(Game, List, List, 1).
 
 
 gameLoop([Board|GamePieces], [CurrPlayer|NextPlayers], Players, PlayerNum) :-
 					printBoard([Board|GamePieces]),
 					checkEmptyStock(GamePieces),
-					once(ite(CurrPlayer == p, playerTurn([Board|GamePieces], PlayerNum, [NewBoard|NewStock]), botTurnLv1([Board|GamePieces], PlayerNum, [NewBoard|NewStock]))),
+					once(ite(CurrPlayer == p, playerTurn([Board|GamePieces], PlayerNum, [NewBoard|NewStock]), botTurn([Board|GamePieces], PlayerNum, [NewBoard|NewStock], CurrPlayer))),
 					it(gameWin(NewBoard),gameEnd([NewBoard|NewStock], PlayerNum)),
 					ite(NextPlayers == [], NewPlayerNum is 1, NewPlayerNum is PlayerNum + 1),
 					ite(NextPlayers == [],
