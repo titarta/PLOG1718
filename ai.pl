@@ -34,7 +34,7 @@ botTurnLv2Aux([CurrPlay|Plays], GoodPlay) :-
 
 botTurnLv3(Game, Num, NewGame) :-
         noOfNonLosingGames(Game, Number),
-        ite(Number =< 8, botTurnLv3aux1(Game, Num, NewGame), botTurnLv2(Game, Num, NewGame)).
+        ite(Number =< 12, botTurnLv3aux1(Game, Num, NewGame), botTurnLv2(Game, Num, NewGame)).
 
 botTurnLv3aux1(Game, Num, NewGame) :-
         nl, write('Player '), write(Num),write(' turn:'),nl,
@@ -45,20 +45,19 @@ botTurnLv3aux1(Game, Num, NewGame) :-
 botTurnLv3Aux2(Plays, GoodPlay) :-
     restrictToNonLosingGame(Plays, NonLosingPlays),
     nl, nl, write(NonLosingPlays), nl, nl, write(Plays), nl, nl,
-    ie(getBest(NonLosingPlays, GoodPlay, Value), getListElemAt(0, Plays, GoodPlay)).
+    ite(getBest(NonLosingPlays, GoodPlay, Value), ! , getListElemAt(0, Plays, GoodPlay)).
 
 
 getBest([], _, _) :- !, fail.
 
 getBest([Test], Test, Value) :-
-    evaluate(Test, Value, 0).
+    evaluate(Test, Value).
 
 getBest([CurrTest|NextTests], BestPlay, Value) :-
       getBest(NextTests, CurrPlay, NewValue),
-      evaluate(CurrTest, EvaluateValue, 0),
-      toInt(EvaluateValue, IntValue),
-      ite(IntValue > NewValue, BestPlay = CurrTest, BestPlay = CurrPlay),
-      ite(IntValue > NewValue, Value = IntValue, Value = NewValue).
+      evaluate(CurrTest, EvaluateValue),
+      ite(EvaluateValue @>= NewValue, BestPlay = CurrTest, BestPlay = CurrPlay),
+      ite(EvaluateValue @>= NewValue, Value is EvaluateValue, Value is NewValue).
 
 
 
@@ -83,9 +82,8 @@ nonLosingGame(Game) :-
 restrictToNonLosingGame(Plays, NewPlays) :-
       filter(nonLosingGame, Plays, NewPlays).
 
-evaluate(Game, Value, Depth) :-
+evaluate(Game, Value) :-
           write('Start evaluate'), nl,
-          Depth == 0,
           once(getPossiblePlays(Game, EnemyPlaysAll)),
           once(restrictToNonLosingGame(EnemyPlaysAll, EnemyPlays)),
           once(getEnemyPlaysValue(EnemyPlays, EnemyPlaysValue)),
@@ -93,9 +91,11 @@ evaluate(Game, Value, Depth) :-
           len(EnemyPlaysValue, NumberEnemyPlays),
           sum_list(EnemyPlaysValue, SumEnemyPlays),
           write('SumEnemyPlays: '), write(SumEnemyPlays), write('   NumberEnemyPlays: '), write(NumberEnemyPlays), nl,
-          Value is SumEnemyPlays/NumberEnemyPlays,
+          ite(SumEnemyPlays == 0, Value is -100, Value is SumEnemyPlays/NumberEnemyPlays - NumberEnemyPlays),
+          write('Value: '), write(Value), nl,
           write('End evaluate'), nl.
 
+evaluate(_, 100) :- write('Evaluated as 100'), nl.
 
 
 getEnemyPlaysValue([EnemyPlay],[ValueOfPlay]) :-
