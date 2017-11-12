@@ -18,7 +18,7 @@ printList([Head | Tail]):-
 	write(Head),
 	printList(Tail).
 
-	%%% 1. element row; 2. element column; 3. matrix; 4. query element.
+%%% 1. element row; 2. element column; 3. matrix; 4. query element.
 getMatrixElemAt(0, ElemCol, [ListAtTheHead|_], Elem):-
 	getListElemAt(ElemCol, ListAtTheHead, Elem).
 getMatrixElemAt(ElemRow, ElemCol, [_|RemainingLists], Elem):-
@@ -79,7 +79,7 @@ filter(Pred, [ListElem|List], [ListElem|Elems]) :-
   filter(Pred, List, Elems).
 
 filter(Pred, [L|H] , NewL) :-
-		filter(Pred, H, NewL).
+  filter(Pred, H, NewL).
 
 aplica(P, LArgs) :- G =.. [P|LArgs], G.
 

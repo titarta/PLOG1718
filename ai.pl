@@ -23,7 +23,7 @@ botTurnLv2(Game, Num, NewGame) :-
 
 botTurnLv2Aux([Play], GoodPlay) :- GoodPlay = Play.
 botTurnLv2Aux([CurrPlay|Plays], GoodPlay) :-
-   ite(nonLosingGame(CurrPlay), GoodPlay = CurrPlay, botTurnLv2Aux(Plays,GoodPlay)).
+  ite(nonLosingGame(CurrPlay), GoodPlay = CurrPlay, botTurnLv2Aux(Plays,GoodPlay)).
 
 botTurnLv3(Game, Num, NewGame) :-
   noOfNonLosingGames(Game, Number),

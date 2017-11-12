@@ -48,13 +48,13 @@ movePiece(_, _, _, Board, Board) :- fail.
 % Board preset
 
 initialBoard([
-			[empty, empty, empty, empty],
-			[empty, empty, empty, empty],
-			[empty, empty, empty, empty],
-			[empty, empty, empty, empty]]).
+  [empty, empty, empty, empty],
+  [empty, empty, empty, empty],
+  [empty, empty, empty, empty],
+  [empty, empty, empty, empty]]).
 
 initialGame(Game) :- initialBoard(Board),
-					Game = [Board, 8, 8, 8].
+  Game = [Board, 8, 8, 8].
 
 %%%%%%% Test Winning the game %%%%%%%%
 
@@ -242,24 +242,24 @@ t :- askPiece(_,_).
 %%% Unit testing %%%
 
 teste1 :- initialBoard(Board),
-		movePiece(n2h, 0, 0, Board, Board1),
-		movePiece(n2h, 0, 1, Board1, Board2),
-		movePiece(n2h, 0, 2, Board2, Board3),
-		movePiece(n1p, 0, 3, Board3, Board4),
-		gameWin(Board4).
+  movePiece(n2h, 0, 0, Board, Board1),
+  movePiece(n2h, 0, 1, Board1, Board2),
+  movePiece(n2h, 0, 2, Board2, Board3),
+  movePiece(n1p, 0, 3, Board3, Board4),
+  gameWin(Board4).
 
 teste2 :- initialBoard(Board),
-		movePiece(n2h, 0, 0, Board, Board1),
-		movePiece(n2h, 0, 1, Board1, Board2),
-		movePiece(n2h, 0, 2, Board2, Board3),
-		gameWin(Board3).
+  movePiece(n2h, 0, 0, Board, Board1),
+  movePiece(n2h, 0, 1, Board1, Board2),
+  movePiece(n2h, 0, 2, Board2, Board3),
+  gameWin(Board3).
 
 teste3 :- initialBoard(Board),
-		movePiece(n1h, 0, 0, Board, Board1),
-		movePiece(n2h, 0, 0, Board1, Board2),
-		movePiece(n2h, 0, 1, Board2, Board3),
-		movePiece(n1h, 0, 2, Board3, Board4),
-		gameWin(Board4).
+  movePiece(n1h, 0, 0, Board, Board1),
+  movePiece(n2h, 0, 0, Board1, Board2),
+  movePiece(n2h, 0, 1, Board2, Board3),
+  movePiece(n1h, 0, 2, Board3, Board4),
+  gameWin(Board4).
 
 %%%%%%%%% Print Board %%%%%%%%%%%
 
