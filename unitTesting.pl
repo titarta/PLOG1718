@@ -47,8 +47,8 @@ testGame1([[
   [n1h, n3p, n2h, n2p]], 0, 4, 3]).
 
 unitTests :-
-	testBoardStairs6(Board1),
-	gameWin(Board1).
+  testBoardStairs6(Board1),
+  gameWin(Board1).
 
 testEvaluate :-
   testGame1(Game),
