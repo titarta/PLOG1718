@@ -1,5 +1,3 @@
-
-
 printMatrix([], _).
 printMatrix([Line | Tail], Separator):-
 	printList(Line, Separator), nl, nl,
@@ -20,12 +18,6 @@ printList([Head | Tail]):-
 	write(Head),
 	printList(Tail).
 
-
-
-
-
-
-
 	%%% 1. element row; 2. element column; 3. matrix; 4. query element.
 getMatrixElemAt(0, ElemCol, [ListAtTheHead|_], Elem):-
 	getListElemAt(ElemCol, ListAtTheHead, Elem).
@@ -41,10 +33,8 @@ getListElemAt(Pos, [_|RemainingElems], Elem):-
 	Pos1 is Pos-1,
 	getListElemAt(Pos1, RemainingElems, Elem).
 
-
-
-	setMatrixElemAtWith(0, ElemCol, NewElem, [RowAtTheHead|RemainingRows], [NewRowAtTheHead|RemainingRows]):-
-	setListElemAtWith(ElemCol, NewElem, RowAtTheHead, NewRowAtTheHead).
+setMatrixElemAtWith(0, ElemCol, NewElem, [RowAtTheHead|RemainingRows], [NewRowAtTheHead|RemainingRows]):-
+setListElemAtWith(ElemCol, NewElem, RowAtTheHead, NewRowAtTheHead).
 setMatrixElemAtWith(ElemRow, ElemCol, NewElem, [RowAtTheHead|RemainingRows], [RowAtTheHead|ResultRemainingRows]):-
 	ElemRow > 0,
 	ElemRow1 is ElemRow-1,
@@ -58,9 +48,6 @@ setListElemAtWith(I, Elem, [H|L], [H|ResL]):-
 	I1 is I-1,
 	setListElemAtWith(I1, Elem, L, ResL).
 
-
-
-
 not(X) :- X, !, fail.
 not(_).
 
@@ -73,48 +60,42 @@ it(_,_).
 ie(If, _):- If.
 ie(_, Else) :- Else.
 
-
-
-
+askInteger(Prompt, Min, Max, Option) :-
+  write(Prompt),
+  read(Value),
+  integer(Value),
+  Value >= Min,
+  Value =< Max,
+  Option = Value.
 
 askInteger(Prompt, Min, Max, Option) :-
-														write(Prompt),
-														read(Value),
-														integer(Value),
-														Value >= Min,
-														Value =< Max,
-														Option = Value.
-
-askInteger(Prompt, Min, Max, Option) :-
-														nl, write('Wrong input. Try again.'),nl,nl,
-														askInteger(Prompt, Min, Max, Option).
+  nl, write('Wrong input. Try again.'), nl, nl,
+  askInteger(Prompt, Min, Max, Option).
 
 filter(Pred, [], []) :- !.
 
 filter(Pred, [ListElem|List], [ListElem|Elems]) :-
-		aplica(Pred,[ListElem]),
-		filter(Pred, List, Elems).
+  aplica(Pred, [ListElem]),
+  filter(Pred, List, Elems).
 
 filter(Pred, [L|H] , NewL) :-
 		filter(Pred, H, NewL).
 
-aplica(P,LArgs) :- G =.. [P|LArgs], G.
+aplica(P, LArgs) :- G =.. [P|LArgs], G.
 
 
 len([], LenResult):-
-    LenResult is 0.
+  LenResult is 0.
 
 len([X|Y], LenResult):-
-    len(Y, L),
-    LenResult is L + 1.
+  len(Y, L),
+  LenResult is L + 1.
 
 
 sum_list([], 0).
 sum_list([H|T], Sum) :-
-	 sum_list(T, Rest),
-	 Sum is H + Rest.
-
-
-
+  sum_list(T, Rest),
+  Sum is H + Rest.
+  
 toInt(Value, IntValue) :-
 	IntValue is round(Value).
