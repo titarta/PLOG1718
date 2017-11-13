@@ -75,7 +75,7 @@ evaluate(Game, Value) :-
   len(EnemyPlaysValue, NumberEnemyPlays),
   sum_list(EnemyPlaysValue, SumEnemyPlays),
   write('SumEnemyPlays: '), write(SumEnemyPlays), write('   NumberEnemyPlays: '), write(NumberEnemyPlays), nl,
-  ite(NumberEnemyPlays == 0, Value is 1000, ite(SumEnemyPlays == 0, Value is -1, Value is SumEnemyPlays / NumberEnemyPlays - NumberEnemyPlays / 2)),
+  ite(NumberEnemyPlays == 0, Value is 1000, ite(SumEnemyPlays == 0, Value is -1, Value is SumEnemyPlays / NumberEnemyPlays - NumberEnemyPlays * 10)),
   write('Value: '), write(Value), nl,
   write('End evaluate'), nl.
 
