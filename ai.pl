@@ -45,10 +45,12 @@ getBest([Test], Test, Value) :-
   evaluate(Test, Value).
 
 getBest([CurrTest|NextTests], BestPlay, Value) :-
-  getBest(NextTests, CurrPlay, NewValue),
+  getBest(NextTests, NewPlay, NewValue),
   evaluate(CurrTest, EvaluateValue),
-  ite(EvaluateValue @>= NewValue, BestPlay = CurrTest, BestPlay = CurrPlay),
-  ite(EvaluateValue @>= NewValue, Value is EvaluateValue, Value is NewValue).
+  write(EvaluateValue), nl, write(NewValue), nl,
+  ite(EvaluateValue > NewValue, write('bigger'), write('smaller')), nl,
+  ite(EvaluateValue > NewValue, BestPlay = CurrTest, BestPlay = NewPlay),
+  ite(EvaluateValue > NewValue, Value is EvaluateValue, Value is NewValue).
 
 getBest([CurrTest|NextTests], BestPlay, Value) :-
   getBest(NextTests, BestPlay, Value).
@@ -73,11 +75,11 @@ evaluate(Game, Value) :-
   len(EnemyPlaysValue, NumberEnemyPlays),
   sum_list(EnemyPlaysValue, SumEnemyPlays),
   write('SumEnemyPlays: '), write(SumEnemyPlays), write('   NumberEnemyPlays: '), write(NumberEnemyPlays), nl,
-  ite(NumberEnemyPlays == 0, Value is 1000, ite(SumEnemyPlays == 0, Value is -1, Value is SumEnemyPlays / NumberEnemyPlays)),
+  ite(NumberEnemyPlays == 0, Value is 1000, ite(SumEnemyPlays == 0, Value is -1, Value is SumEnemyPlays / NumberEnemyPlays - NumberEnemyPlays / 2)),
   write('Value: '), write(Value), nl,
   write('End evaluate'), nl.
 
-evaluate(_, -1).
+evaluate(_, -1) :- write('Failed, -1'), nl.
 
 getEnemyPlaysValue([EnemyPlay],[ValueOfPlay]) :-
   noOfNonLosingGames(EnemyPlay, ValueOfPlay).
