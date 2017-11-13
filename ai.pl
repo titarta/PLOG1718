@@ -73,11 +73,11 @@ evaluate(Game, Value) :-
   len(EnemyPlaysValue, NumberEnemyPlays),
   sum_list(EnemyPlaysValue, SumEnemyPlays),
   write('SumEnemyPlays: '), write(SumEnemyPlays), write('   NumberEnemyPlays: '), write(NumberEnemyPlays), nl,
-  ite(SumEnemyPlays == 0, Value is -100, ite(NumberEnemyPlays == 0, Value is 100, Value is SumEnemyPlays / NumberEnemyPlays)),
+  ite(NumberEnemyPlays == 0, Value is 1000, ite(SumEnemyPlays == 0, Value is -1, Value is SumEnemyPlays / NumberEnemyPlays)),
   write('Value: '), write(Value), nl,
   write('End evaluate'), nl.
 
-%evaluate(_, 0) :- write('Evaluated as 100'), nl.
+evaluate(_, -1).
 
 getEnemyPlaysValue([EnemyPlay],[ValueOfPlay]) :-
   noOfNonLosingGames(EnemyPlay, ValueOfPlay).
