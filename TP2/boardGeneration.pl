@@ -30,6 +30,7 @@ test2Arrays([],[]).
 test2Arrays([Array1Elem|Array1], [Array2Elem|Array2]) :-
   Sum is Array1Elem + Array2Elem,
   Sum =< 7,
+  it(Sum =< 2, (Array1Elem == 0; Array2Elem == 0)),
   test2Arrays(Array1, Array2), !.
 
 create2Arrays(Array1, Array2) :-
@@ -56,3 +57,6 @@ initialBoard([[e,e,e,e,e,e],
 
 
 
+
+it(If, Then):- If, !, Then.
+it(_,_).
