@@ -5,12 +5,12 @@ getLine(Line, Number) :-
   length(Line, Length),
   domain(Line, 1, Length),
   all_distinct(Line),
-  getLineAux(Line, Number, 0).
+  getLineAux(Line, Length, Number, 0).
 
 getLineAux([H | T], Length, Number, Max) :-
   (H #> Max #/\
   NewMax #= H #/\
-  NewNumber #= Number - 1) #\
+  NewNumber #= Number - 1) #\/
   (H #< Max #/\
   NewMax #= Max #/\
   NewNumber #= Number),
