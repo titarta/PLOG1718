@@ -36,7 +36,7 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   transpose(Solution, TransposedSolution),
   getLines(TransposedSolution, Up, Down),
   statistics(walltime, [T1 | _]),
-  labeling([leftmost,bisect,up], SolutionNumbers),
+  labeling([leftmost, bisect, up], SolutionNumbers),
   statistics(walltime, [T2 | _]),
   Time1 is T1 - T0,
   Time2 is T2 - T1,
@@ -51,5 +51,5 @@ test1 :-
       [5, _, _, 2, 2, _], 
       [_, 3, 4, _, _, 4]
     ], 
-    Solution),
-    maplist(portray_clause, Solution).
+  Solution),
+  maplist(portray_clause, Solution).
