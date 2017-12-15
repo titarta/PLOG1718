@@ -36,7 +36,7 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   transpose(Solution, TransposedSolution),
   getLines(TransposedSolution, Up, Down),
   statistics(walltime, [T1 | _]),
-  labeling([bisect], SolutionNumbers),
+  labeling([max, bisect, up], SolutionNumbers),
   statistics(walltime, [T2 | _]),
   Time1 is T1 - T0,
   Time2 is T2 - T1,
