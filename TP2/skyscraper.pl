@@ -55,9 +55,9 @@ test1 :-
   maplist(portray_clause, Solution).
 
 
-visualize_signature([],0).
+visualize_signature([], 0).
 visualize_signature([H | T], Value) :-
-maximum(A,[H | T]),
-H #= A #<=> S,
-visualize_signature(T, NewValue),
-Value #= NewValue + S.
+  visualize_signature(T, NewValue),
+  maximum(A, [H | T]),
+  H #= A #<=> S,
+  Value #= NewValue + S.
