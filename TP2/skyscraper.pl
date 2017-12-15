@@ -5,7 +5,8 @@ getLine(Line, Number) :-
   length(Line, Length),
   domain(Line, 1, Length),
   all_distinct(Line),
-  getLineAux(Line, Length, Number, 0).
+  visualize_signature(Line, Values),
+  sum(Values, #=, Number).
 
 getLineAux([H | T], Length, Number, Max) :-
   (H #> Max #/\
@@ -21,9 +22,9 @@ getLineAux([], Length, 0, Length).
 
 getLines([], [], []).
 getLines([Line | TL], [NumberFront | TF], [NumberBack | TB]) :-
-  getLine(Line, NumberFront),
+  getLine(Line, NumberBack),
   reverse(Line, LineReversed),
-  getLine(LineReversed, NumberBack),
+  getLine(LineReversed, NumberFront),
   getLines(TL, TF, TB).
 
 
@@ -53,3 +54,11 @@ test1 :-
     ], 
   Solution),
   maplist(portray_clause, Solution).
+
+
+visualize_signature([],[]).
+visualize_signature([H | T], [S|Ss]) :-
+S in 0..1,
+maximum(A,[H | T]),
+H #= A #<=> S,
+visualize_signature(T, Ss).
