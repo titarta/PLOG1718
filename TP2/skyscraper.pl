@@ -5,8 +5,7 @@ getLine(Line, Number) :-
   length(Line, Length),
   domain(Line, 1, Length),
   all_distinct(Line),
-  visualize_signature(Line, Values),
-  sum(Values, #=, Number).
+  visualize_signature(Line, Number).
 
 getLineAux([H | T], Length, Number, Max) :-
   (H #> Max #/\
@@ -56,9 +55,10 @@ test1 :-
   maplist(portray_clause, Solution).
 
 
-visualize_signature([],[]).
-visualize_signature([H | T], [S|Ss]) :-
+visualize_signature([],0).
+visualize_signature([H | T], Value) :-
 S in 0..1,
 maximum(A,[H | T]),
 H #= A #<=> S,
-visualize_signature(T, Ss).
+visualize_signature(T, NewValue),
+Value #= NewValue + S.
