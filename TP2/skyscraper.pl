@@ -36,7 +36,7 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   transpose(Solution, TransposedSolution),
   getLines(TransposedSolution, Up, Down),
   statistics(walltime, [T1 | _]),
-  labeling([leftmost, bisect, up], SolutionNumbers),
+  labeling([bisect], SolutionNumbers),
   statistics(walltime, [T2 | _]),
   Time1 is T1 - T0,
   Time2 is T2 - T1,
@@ -57,7 +57,6 @@ test1 :-
 
 visualize_signature([],0).
 visualize_signature([H | T], Value) :-
-S in 0..1,
 maximum(A,[H | T]),
 H #= A #<=> S,
 visualize_signature(T, NewValue),
