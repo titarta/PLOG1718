@@ -1,6 +1,9 @@
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
 
+:- include('boardGeneration.pl').
+
+
 getLine(Line, Number) :-
   length(Line, Length),
   domain(Line, 1, Length),
@@ -52,6 +55,12 @@ test1 :-
       [_, 3, 4, _, _, 4]
     ], 
   Solution),
+  maplist(portray_clause, Solution).
+
+test2(Size) :-
+  boardGeneration(Size, Board),
+  maplist(portray_clause, Board), nl, nl,
+  skyscraper(Board, Solution),
   maplist(portray_clause, Solution).
 
 
