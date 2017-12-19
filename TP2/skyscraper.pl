@@ -7,7 +7,6 @@ getLine(Line, Number) :-
   all_distinct(Line),
   % getLineDisjunction(Line, Number, 0).
   reverse(Line, LineReversed),
-  waitUntilMax(LineReversed),
   getLineReification(LineReversed, Number).
 
 getLineDisjunction([], 0, _).
@@ -28,17 +27,6 @@ getLineReification([H | T], Value) :-
   maximum(A, [H | T]),
   H #= A #<=> S,
   Value #= NewValue + S.
-
-waitUntilMax(Line) :-
-  length(Line, Maximum),
-  element(Position, Line, Maximum),
-  waitUntilMax(Line, Position, Line).
-
-waitUntilMax(Line, 1, Line).
-
-waitUntilMax(Line, Position, [_ | T]) :-
-  NewPosition #= Position - 1,
-  waitUntilMax(Line, NewPosition, T).
 
 getLines([], [], []).
 
