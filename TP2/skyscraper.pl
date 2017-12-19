@@ -14,8 +14,9 @@ getLineDisjunction([], 0, _).
 getLineDisjunction([H | T], Number, Max) :-
   (H #> Max #/\
   NewMax #= H #/\
-  NewNumber #= Number - 1) #\
-  (NewMax #= Max #/\
+  NewNumber #= Number - 1) #\/
+  (H #< Max #/\
+  NewMax #= Max #/\
   NewNumber #= Number),
   getLineDisjunction(T, NewNumber, NewMax).
 
