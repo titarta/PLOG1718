@@ -15,8 +15,7 @@ getLineDisjunction([H | T], Number, Max) :-
   (H #> Max #/\
   NewMax #= H #/\
   NewNumber #= Number - 1) #\
-  (H #< Max #/\
-  NewMax #= Max #/\
+  (NewMax #= Max #/\
   NewNumber #= Number),
   getLineDisjunction(T, NewNumber, NewMax).
 
@@ -75,6 +74,16 @@ test1 :-
   maplist(portray_clause, Solution).
 
 test2 :-
+  Solution = [
+    [_, _, _, 3, _, _, _, _],
+    [_, _, _, _, _, _, 8, 2],
+    [_, _, _, 5, _, _, _, _],
+    [2, _, _, _, _, _, _, _],
+    [_, _, 3, _, _, _, _, _],
+    [1, _, 5, _, _, _, _, _],
+    [_, _, _, 6, _, 2, _, _],
+    [_, _, _, _, _, _, _, _]
+  ],
   skyscraper(
   [
     [3, 3, _, 3, _, 3, _, _], 
@@ -87,6 +96,6 @@ test2 :-
 
 generate1(Size) :-
   boardGeneration(Size, Board),
-  maplist(portray_clause, Board), nl, nl,
+  maplist(portray_clause, Board), nl,
   skyscraper(Board, Solution),
   maplist(portray_clause, Solution).
