@@ -11,23 +11,20 @@ generateBoard(Size, Rows) :-
   maplist(all_distinct, Columns),
   labeling([value(mySelValores)], Vs).
 
-
-
 mySelValores(Var, _Rest, BB, BB1) :-
-    fd_set(Var, Set),
-    select_best_value(Set, Value),
-    (   
-        first_bound(BB, BB1), Var #= Value
-        ;   
-        later_bound(BB, BB1), Var #\= Value
-    ).
+  fd_set(Var, Set),
+  select_best_value(Set, Value),
+  (   
+    first_bound(BB, BB1), Var #= Value
+    ;   
+    later_bound(BB, BB1), Var #\= Value
+  ).
 
 select_best_value(Set, BestValue):-
-    fdset_to_list(Set, Lista),
-    length(Lista, Len),
-    random(0, Len, RandomIndex),
-    nth0(RandomIndex, Lista, BestValue).
-
+  fdset_to_list(Set, Lista),
+  length(Lista, Len),
+  random(0, Len, RandomIndex),
+  nth0(RandomIndex, Lista, BestValue).
 
 seesRight([], 0, _).
 
@@ -36,9 +33,8 @@ seesRight([Elem|Array], Value, BiggestValue) :-
   seesRight(Array, NewValue, Elem),
   Value is NewValue + 1.
 
-  seesRight([_|Array], Value, BiggestValue) :-
+seesRight([_|Array], Value, BiggestValue) :-
   seesRight(Array, Value, BiggestValue).
-
 
 getnvalues(Size, Values) :-
   NewSize is Size / 2,
@@ -53,6 +49,7 @@ getArray(Size, Game, Array) :-
   getArrayAux(Positions, Game, Array, 1).
 
 getArrayAux(_, [], [], _).
+
 getArrayAux(Positions, [Hgame | Tgame], Array, Position) :-
   member(Position, Positions),
   seesRight(Hgame, Value, 0),
@@ -64,8 +61,6 @@ getArrayAux(Positions, [_ | Tgame], Array, Position) :-
   NewPosition is Position + 1,
   getArrayAux(Positions, Tgame, NewArray, NewPosition),
   append([_], NewArray, Array).
-
-
 
 boardGeneration(Size, Board) :-
   generateBoard(Size, Game),
@@ -79,7 +74,7 @@ boardGeneration(Size, Board) :-
   transpose(Game4aux1, Game4aux2),
   reverse(Game4aux2, Game4),
   getArray(Size, Game4, Array4),
-  Board = [Array1,Array2, Array3, Array4].
+  Board = [Array1, Array2, Array3, Array4].
 
 
 

@@ -3,12 +3,11 @@
 
 :- include('boardGeneration.pl').
 
-
 getLine(Line, Number) :-
   length(Line, Length),
   domain(Line, 1, Length),
   all_distinct(Line),
-  visualize_signature(Line, Number).
+  visualizeSignature(Line, Number).
 
 getLineAux([H | T], Length, Number, Max) :-
   (H #> Max #/\
@@ -21,14 +20,12 @@ getLineAux([H | T], Length, Number, Max) :-
 
 getLineAux([], Length, 0, Length).
 
-
 getLines([], [], []).
 getLines([Line | TL], [NumberFront | TF], [NumberBack | TB]) :-
   getLine(Line, NumberBack),
   reverse(Line, LineReversed),
   getLine(LineReversed, NumberFront),
   getLines(TL, TF, TB).
-
 
 skyscraper([Left, Right, Up, Down], Solution) :-
   statistics(walltime, [T0 | _]),
@@ -63,15 +60,14 @@ test2(Size) :-
   skyscraper(Board, Solution),
   maplist(portray_clause, Solution).
 
-waituntilmax(_, [], _).
-waituntilmax(Size, [H | T], Number) :-
-  H #= Size #<=> (T #= [], visualize_signature([H | T], Number)),
-  waituntilmax(Size, T, Number).
+waitUntilMax(_, [], _).
+waitUntilMax(Size, [H | T], Number) :-
+  H #= Size #<=> (T #= [], visualizeSignature([H | T], Number)),
+  waitUntilMax(Size, T, Number).
 
-
-visualize_signature([], 0).
-visualize_signature([H | T], Value) :-
-  visualize_signature(T, NewValue),
+visualizeSignature([], 0).
+visualizeSignature([H | T], Value) :-
+  visualizeSignature(T, NewValue),
   maximum(A, [H | T]),
   H #= A #<=> S,
   Value #= NewValue + S.
