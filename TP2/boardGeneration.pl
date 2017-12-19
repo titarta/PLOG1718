@@ -60,7 +60,7 @@ getArrayAux(Positions, [Hgame | Tgame], Array, Position) :-
   getArrayAux(Positions, Tgame, NewArray, NewPosition),
   append([Value], NewArray, Array).
 
-getArrayAux(Positions, [Hgame | Tgame], Array, Position) :-
+getArrayAux(Positions, [_ | Tgame], Array, Position) :-
   NewPosition is Position + 1,
   getArrayAux(Positions, Tgame, NewArray, NewPosition),
   append([_], NewArray, Array).

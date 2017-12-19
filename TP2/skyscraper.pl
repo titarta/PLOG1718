@@ -63,6 +63,11 @@ test2(Size) :-
   skyscraper(Board, Solution),
   maplist(portray_clause, Solution).
 
+waituntilmax(_, [], _).
+waituntilmax(Size, [H | T], Number) :-
+  H #= Size #<=> (T #= [], visualize_signature([H | T], Number)),
+  waituntilmax(Size, T, Number).
+
 
 visualize_signature([], 0).
 visualize_signature([H | T], Value) :-
