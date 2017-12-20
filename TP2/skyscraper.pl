@@ -6,16 +6,16 @@
 
 getLine(Line, Number) :-
   all_distinct(Line),
-  getLineDisjunctionNew(Line, Number, 0).
+  getLineSimpleReification(Line, Number, 0).
   %reverse(Line, LineReversed),
   %getLineReification(LineReversed, Number).
 
-getLineDisjunctionNew([], 0, _).
-getLineDisjunctionNew([H | T], Number, Max) :-
+getLineSimpleReification([], 0, _).
+getLineSimpleReification([H | T], Number, Max) :-
   H #> Max #<=> S,
   NewNumber #= Number - S,
   maximum(NewMax, [H, Max]),
-  getLineDisjunctionNew(T, NewNumber, NewMax).
+  getLineSimpleReification(T, NewNumber, NewMax).
 
 getLineDisjunction([], 0, _).
 getLineDisjunction([H | T], Number, Max) :-
@@ -65,17 +65,17 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   write('L: '), write(Time2), nl.
   
 test1 :-
-  ViewList = [
+  ViewLists = [
     [_, 2, 3, 4, _, _], 
     [_, _, 4, 3, 2, _], 
     [5, _, _, 2, 2, _], 
     [_, 3, 4, _, _, 4]
   ],
-  skyscraper(ViewList, Solution),
-  printBoard(ViewList, Solution).
+  skyscraper(ViewLists, Solution),
+  printBoard(ViewLists, Solution).
 
 test2 :-
-  ViewList = [
+  ViewLists = [
     [3, 3, _, 3, _, 3, _, _], 
     [_, _, 2, _, 4, 4, _, 1],
     [_, _, 5, 3, _, 2, _, 4],
@@ -91,11 +91,11 @@ test2 :-
     [_, _, _, 6, _, 2, _, _],
     [_, _, _, _, _, _, _, _]
   ],
-  skyscraper(ViewList, Solution),
-  printBoard(ViewList, Solution).
+  skyscraper(ViewLists, Solution),
+  printBoard(ViewLists, Solution).
 
-generate1(Size) :-
-  boardGeneration(Size, ViewList),
-  maplist(portray_clause, ViewList), nl,
-  skyscraper(ViewList, Solution),
-  printBoard(ViewList, Solution).
+generate(Size) :-
+  problemGeneration(Size, ViewLists),
+  maplist(portray_clause, ViewLists), nl,
+  skyscraper(ViewLists, Solution),
+  printBoard(ViewLists, Solution).

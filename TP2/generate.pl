@@ -9,22 +9,22 @@ generateBoard(Size, ViewList) :-
   maplist(all_distinct, ViewList),
   transpose(ViewList, Columns),
   maplist(all_distinct, Columns),
-  labeling([value(mySelValores)], Vs).
+  labeling([value(randomLabeling)], Vs).
 
-mySelValores(Var, _Rest, BB, BB1) :-
+randomLabeling(Var, _Rest, BB, BB1) :-
   fd_set(Var, Set),
-  select_best_value(Set, Value),
+  randomSelector(Set, Value),
   (   
     first_bound(BB, BB1), Var #= Value
     ;   
     later_bound(BB, BB1), Var #\= Value
   ).
 
-select_best_value(Set, BestValue):-
-  fdset_to_list(Set, Lista),
-  length(Lista, Len),
+randomSelector(Set, BestValue):-
+  fdset_to_list(Set, List),
+  length(List, Len),
   random(0, Len, RandomIndex),
-  nth0(RandomIndex, Lista, BestValue).
+  nth0(RandomIndex, List, BestValue).
 
 seesRight([], 0, _).
 
@@ -33,47 +33,47 @@ seesRight([Elem | Array], Value, BiggestValue) :-
   seesRight(Array, NewValue, Elem),
   Value is NewValue + 1.
 
-seesRight([_|Array], Value, BiggestValue) :-
+seesRight([_ | Array], Value, BiggestValue) :-
   seesRight(Array, Value, BiggestValue).
 
-getnvalues(Size, Values) :-
-  NewSize is Size / 2,
-  Size2 is round(NewSize),
-  length(Values, Size2),
+chooseLines(Size, Values) :-
+  ExactHalf is Size / 2,
+  Half is round(ExactHalf),
+  length(Values, Half),
   domain(Values, 1, Size),
   all_distinct(Values),
-  labeling([value(mySelValores)], Values).
+  labeling([value(randomLabeling)], Values).
 
-getArray(Size, Game, Array) :-
-  getnvalues(Size, Positions),
-  getArrayAux(Positions, Game, Array, 1).
+getArray(Size, Board, Array) :-
+  chooseLines(Size, Positions),
+  getArrayAux(Positions, Board, Array, 1).
 
 getArrayAux(_, [], [], _).
 
-getArrayAux(Positions, [Hgame | Tgame], Array, Position) :-
+getArrayAux(Positions, [HBoard | TBoard], Array, Position) :-
   member(Position, Positions),
-  seesRight(Hgame, Value, 0),
+  seesRight(HBoard, Value, 0),
   NewPosition is Position + 1,
-  getArrayAux(Positions, Tgame, NewArray, NewPosition),
+  getArrayAux(Positions, TBoard, NewArray, NewPosition),
   append([Value], NewArray, Array).
 
-getArrayAux(Positions, [_ | Tgame], Array, Position) :-
+getArrayAux(Positions, [_ | TBoard], Array, Position) :-
   NewPosition is Position + 1,
-  getArrayAux(Positions, Tgame, NewArray, NewPosition),
+  getArrayAux(Positions, TBoard, NewArray, NewPosition),
   append([_], NewArray, Array).
 
-boardGeneration(Size, ViewList) :-
-  generateBoard(Size, Game),
-  getArray(Size, Game, Left),
-  transpose(Game, Game3),
-  getArray(Size, Game3, Up),
-  reverse(Game3, Game2aux),
-  transpose(Game2aux, Game2),
-  getArray(Size, Game2, Right),
-  reverse(Game2, Game4aux1),
-  transpose(Game4aux1, Game4aux2),
-  reverse(Game4aux2, Game4),
-  getArray(Size, Game4, Down),
+problemGeneration(Size, ViewList) :-
+  generateBoard(Size, BoardLeft),
+  getArray(Size, BoardLeft, Left),
+  transpose(BoardLeft, BoardUp),
+  getArray(Size, BoardUp, Up),
+  reverse(BoardUp, BoardRightAux),
+  transpose(BoardRightAux, BoardRight),
+  getArray(Size, BoardRight, Right),
+  reverse(BoardRight, BoardDownAux1),
+  transpose(BoardDownAux1, BoardDownAux2),
+  reverse(BoardDownAux2, BoardDown),
+  getArray(Size, BoardDown, Down),
   ViewList = [Left, Right, Up, Down].
 
 

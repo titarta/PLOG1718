@@ -18,7 +18,6 @@ printBoard([Left, Right, Up, Down], Board) :-
   printArrayLine(Down),
   nl.
 
-
 printLines([LastLine], Size, [Last1], [Last2]) :-
   printLeftElem(Last1),
   printLine(LastLine),
@@ -40,7 +39,6 @@ printLines([Line | Board], Size, [H1 | T1], [H2 | T2]):-
   printDivision(Size),
   printLines(Board, Size, T1, T2).
 
-
 printLine([]).
 printLine([Elem | Line]) :-
   nonvar(Elem),
@@ -57,13 +55,13 @@ printLine([_ | Line]) :-
   put_code(9553),
   printLine(Line).
 
-
 printTopDivision(1):-
   put_code(9552),
   put_code(9552),
   put_code(9552),
   put_code(9559),
   nl.
+
 printTopDivision(Size) :-
   put_code(9552),
   put_code(9552),
@@ -78,6 +76,7 @@ printDivision(1):-
   put_code(9552),
   put_code(9571),
   nl.
+
 printDivision(Size) :-
   put_code(9552),
   put_code(9552),
@@ -92,6 +91,7 @@ printBottomDivision(1):-
   put_code(9552),
   put_code(9565),
   nl.
+
 printBottomDivision(Size) :-
   put_code(9552),
   put_code(9552),
@@ -101,6 +101,7 @@ printBottomDivision(Size) :-
   printBottomDivision(NewSize).
 
 printBlank(0):- !.
+
 printBlank(Num) :-
   write(' '),
   NewNum is Num - 1,
@@ -112,23 +113,23 @@ printLeftElem(Elem):-
   write(Elem),
   printBlank(1),
   put_code(9553).
+
 printLeftElem(_):-
   printBlank(2),
   write('_'),
   printBlank(1),
   put_code(9553).
 
-
 printRightElem(Elem):-
   nonvar(Elem),
   printBlank(1),
   write(Elem),
   printBlank(2).
+
 printRightElem(_):-
   printBlank(1),
   write('_'),
   printBlank(2).
-
 
 printSecTopDivision(-1) :-
   put_code(9552),
@@ -136,6 +137,7 @@ printSecTopDivision(-1) :-
   put_code(9552),
   put_code(9559),
   nl.
+
 printSecTopDivision(Size) :-
   put_code(9552),
   put_code(9552),
@@ -150,6 +152,7 @@ printSecBotDivision(-1) :-
   put_code(9552),
   put_code(9565),
   nl.
+
 printSecBotDivision(Size) :-
   put_code(9552),
   put_code(9552),
@@ -159,6 +162,7 @@ printSecBotDivision(Size) :-
   printSecBotDivision(NewSize).
 
 printArrayLine([]).
+
 printArrayLine([Elem | Line]) :-
   nonvar(Elem),
   printBlank(1),
