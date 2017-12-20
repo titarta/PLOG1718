@@ -2,6 +2,7 @@
 :- use_module(library(lists)).
 
 :- include('boardGeneration.pl').
+:- include('print.pl').
 
 getLine(Line, Number) :-
   all_distinct(Line),
@@ -72,7 +73,7 @@ test1 :-
       [_, 3, 4, _, _, 4]
     ], 
   Solution),
-  maplist(portray_clause, Solution).
+  printBoard(Solution).
 
 test2 :-
   Solution = [
