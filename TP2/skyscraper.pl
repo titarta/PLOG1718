@@ -73,7 +73,12 @@ test1 :-
       [_, 3, 4, _, _, 4]
     ], 
   Solution),
-  printBoard(Solution).
+  printBoard(Solution, [
+      [_, 2, 3, 4, _, _], 
+      [_, _, 4, 3, 2, _], 
+      [5, _, _, 2, 2, _], 
+      [_, 3, 4, _, _, 4]
+    ]).
 
 test2 :-
   Solution = [

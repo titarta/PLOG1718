@@ -1,28 +1,63 @@
 
-printBoard(Board) :-
+printBoard(Board, [Array1, Array2, Array3, Array4]) :-
   length(Board, Size),
+
+  printBlank(4),
   put_code(9556), 
   printTopDivision(Size),
-  printLines(Board, Size).
 
-
-printLines([LastLine], Size) :-
+  printBlank(4),
   put_code(9553),
-  printLine(LastLine),
+  printLine(Array3),
+  nl,
+
+  put_code(9556),
+  printSecTopDivision(Size),
+
+  printLines(Board, Size, Array1, Array2),
+  
+  printBlank(4),
+  put_code(9553),
+  printLine(Array4),
+  nl,
+
+  printBlank(4),
   put_code(9562),
   printBottomDivision(Size).
-printLines([Line | Board], Size):-
-  put_code(9553),
+
+
+printLines([LastLine], Size, [Last1], [Last2]) :-
+  printLeftElem(Last1),
+  printLine(LastLine),
+  printRightElem(Last2),
+  nl,
+  put_code(9562),
+  printSecBotDivision(Size).
+
+printLines([Line | Board], Size, [H1 | T1], [H2 | T2]):-
+  printLeftElem(H1),
   printLine(Line),
+  printRightElem(H2),
+  nl,
+
   put_code(9568),
   printDivision(Size),
-  printLines(Board, Size).
+  printLines(Board, Size, T1, T2).
 
-printLine([]):- nl.
+
+printLine([]).
 printLine([Elem | Line]) :-
-  write(' '),
+  nonvar(Elem),
+  printBlank(1),
   write(Elem),
-  write(' '),
+  printBlank(1),
+  put_code(9553),
+  printLine(Line).
+
+printLine([Elem | Line]) :-
+  printBlank(1),
+  write('_'),
+  printBlank(1),
   put_code(9553),
   printLine(Line).
 
@@ -41,7 +76,7 @@ printTopDivision(Size) :-
   NewSize is Size - 1,
   printTopDivision(NewSize).
 
-printDivision(1):-
+printDivision(-1):-
   put_code(9552),
   put_code(9552),
   put_code(9552),
@@ -68,3 +103,65 @@ printBottomDivision(Size) :-
   put_code(9577),
   NewSize is Size - 1,
   printBottomDivision(NewSize).
+
+printBlank(0):- !.
+printBlank(Num) :-
+  write(' '),
+  NewNum is Num - 1,
+  printBlank(NewNum).
+
+printLeftElem(Elem):-
+  nonvar(Elem),
+  put_code(9553),
+  printBlank(1),
+  write(Elem),
+  printBlank(1),
+  put_code(9553).
+printLeftElem(_):-
+  put_code(9553),
+  printBlank(1),
+  write('_'),
+  printBlank(1),
+  put_code(9553).
+
+
+printRightElem(Elem):-
+  nonvar(Elem),
+  printBlank(1),
+  write(Elem),
+  printBlank(1),
+  put_code(9553).
+printRightElem(_):-
+  printBlank(1),
+  write('_'),
+  printBlank(1),
+  put_code(9553).
+
+
+printSecTopDivision(-1) :-
+  put_code(9552),
+  put_code(9552),
+  put_code(9552),
+  put_code(9559),
+  nl.
+printSecTopDivision(Size) :-
+  put_code(9552),
+  put_code(9552),
+  put_code(9552),
+  put_code(9580),
+  NewSize is Size - 1,
+  printSecTopDivision(NewSize).
+
+printSecBotDivision(-1) :-
+  put_code(9552),
+  put_code(9552),
+  put_code(9552),
+  put_code(9565),
+  nl.
+printSecBotDivision(Size) :-
+  put_code(9552),
+  put_code(9552),
+  put_code(9552),
+  put_code(9580),
+  NewSize is Size - 1,
+  printSecBotDivision(NewSize).
