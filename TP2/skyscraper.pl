@@ -5,12 +5,18 @@
 
 getLine(Line, Number) :-
   all_distinct(Line),
-  % getLineDisjunction(Line, Number, 0).
-  reverse(Line, LineReversed),
-  getLineReification(LineReversed, Number).
+  getLineDisjunctionNew(Line, Number, 0).
+  %reverse(Line, LineReversed),
+  %getLineReification(LineReversed, Number).
+
+getLineDisjunctionNew([], 0, _).
+getLineDisjunctionNew([H | T], Number, Max) :-
+  H #> Max #<=> S,
+  NewNumber #= Number - S,
+  maximum(NewMax, [H, Max]),
+  getLineDisjunctionNew(T, NewNumber, NewMax).
 
 getLineDisjunction([], 0, _).
-
 getLineDisjunction([H | T], Number, Max) :-
   (H #> Max #/\
   NewMax #= H #/\
