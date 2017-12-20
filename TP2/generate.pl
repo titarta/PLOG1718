@@ -2,12 +2,12 @@
 :- use_module(library(lists)).
 :- use_module(library(random)).
 
-generateBoard(Size, Rows) :-
-  length(Rows, Size),
-  maplist(same_length(Rows), Rows),
-  append(Rows, Vs), domain(Vs, 1, Size),
-  maplist(all_distinct, Rows),
-  transpose(Rows, Columns),
+generateBoard(Size, ViewList) :-
+  length(ViewList, Size),
+  maplist(same_length(ViewList), ViewList),
+  append(ViewList, Vs), domain(Vs, 1, Size),
+  maplist(all_distinct, ViewList),
+  transpose(ViewList, Columns),
   maplist(all_distinct, Columns),
   labeling([value(mySelValores)], Vs).
 
@@ -28,7 +28,7 @@ select_best_value(Set, BestValue):-
 
 seesRight([], 0, _).
 
-seesRight([Elem|Array], Value, BiggestValue) :- 
+seesRight([Elem | Array], Value, BiggestValue) :- 
   Elem > BiggestValue,
   seesRight(Array, NewValue, Elem),
   Value is NewValue + 1.
@@ -62,19 +62,19 @@ getArrayAux(Positions, [_ | Tgame], Array, Position) :-
   getArrayAux(Positions, Tgame, NewArray, NewPosition),
   append([_], NewArray, Array).
 
-boardGeneration(Size, Board) :-
+boardGeneration(Size, ViewList) :-
   generateBoard(Size, Game),
-  getArray(Size, Game, Array1),
+  getArray(Size, Game, Left),
   transpose(Game, Game3),
-  getArray(Size, Game3, Array3),
+  getArray(Size, Game3, Up),
   reverse(Game3, Game2aux),
   transpose(Game2aux, Game2),
-  getArray(Size, Game2, Array2),
+  getArray(Size, Game2, Right),
   reverse(Game2, Game4aux1),
   transpose(Game4aux1, Game4aux2),
   reverse(Game4aux2, Game4),
-  getArray(Size, Game4, Array4),
-  Board = [Array1, Array2, Array3, Array4].
+  getArray(Size, Game4, Down),
+  ViewList = [Left, Right, Up, Down].
 
 
 

@@ -1,7 +1,7 @@
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
 
-:- include('boardGeneration.pl').
+:- include('generate.pl').
 :- include('print.pl').
 
 getLine(Line, Number) :-
@@ -65,22 +65,22 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   write('L: '), write(Time2), nl.
   
 test1 :-
-  skyscraper(
-    [
-      [_, 2, 3, 4, _, _], 
-      [_, _, 4, 3, 2, _], 
-      [5, _, _, 2, 2, _], 
-      [_, 3, 4, _, _, 4]
-    ], 
-  Solution),
-  printBoard(Solution, [
-      [_, 2, 3, 4, _, _], 
-      [_, _, 4, 3, 2, _], 
-      [5, _, _, 2, 2, _], 
-      [_, 3, 4, _, _, 4]
-    ]).
+  ViewList = [
+    [_, 2, 3, 4, _, _], 
+    [_, _, 4, 3, 2, _], 
+    [5, _, _, 2, 2, _], 
+    [_, 3, 4, _, _, 4]
+  ],
+  skyscraper(ViewList, Solution),
+  printBoard(ViewList, Solution).
 
 test2 :-
+  ViewList = [
+    [3, 3, _, 3, _, 3, _, _], 
+    [_, _, 2, _, 4, 4, _, 1],
+    [_, _, 5, 3, _, 2, _, 4],
+    [2, 4, _, _, 4, _, _, _]
+  ],
   Solution = [
     [_, _, _, 3, _, _, _, _],
     [_, _, _, _, _, _, 8, 2],
@@ -91,19 +91,11 @@ test2 :-
     [_, _, _, 6, _, 2, _, _],
     [_, _, _, _, _, _, _, _]
   ],
-  skyscraper(
-  [
-    [3, 3, _, 3, _, 3, _, _], 
-    [_, _, 2, _, 4, 4, _, 1],
-    [_, _, 5, 3, _, 2, _, 4],
-    [2, 4, _, _, 4, _, _, _]
-  ], 
-  Solution),
-  maplist(portray_clause, Solution).
+  skyscraper(ViewList, Solution),
+  printBoard(ViewList, Solution).
 
 generate1(Size) :-
-  boardGeneration(Size, Board),
-  maplist(portray_clause, Board), nl,
-  Board2 = Board,
-  skyscraper(Board2, Solution),
-  printBoard(Solution, Board).
+  boardGeneration(Size, ViewList),
+  maplist(portray_clause, ViewList), nl,
+  skyscraper(ViewList, Solution),
+  printBoard(ViewList, Solution).

@@ -1,21 +1,21 @@
 
-printBoard(Board, [Array1, Array2, Array3, Array4]) :-
+printBoard([Left, Right, Up, Down], Board) :-
   length(Board, Size),
 
   nl,
 
   printBlank(5),
-  printArrayLine(Array3),
+  printArrayLine(Up),
   nl,
 
   printBlank(4),
   put_code(9556),
   printTopDivision(Size),
 
-  printLines(Board, Size, Array1, Array2),
+  printLines(Board, Size, Left, Right),
   
   printBlank(5),
-  printArrayLine(Array4),
+  printArrayLine(Down),
   nl.
 
 
@@ -50,7 +50,7 @@ printLine([Elem | Line]) :-
   put_code(9553),
   printLine(Line).
 
-printLine([Elem | Line]) :-
+printLine([_ | Line]) :-
   printBlank(1),
   write('_'),
   printBlank(1),
@@ -166,7 +166,7 @@ printArrayLine([Elem | Line]) :-
   printBlank(2),
   printArrayLine(Line).
 
-printArrayLine([Elem | Line]) :-
+printArrayLine([_ | Line]) :-
   printBlank(1),
   write('_'),
   printBlank(2),
