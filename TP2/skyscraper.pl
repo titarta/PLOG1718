@@ -104,5 +104,6 @@ test2 :-
 generate1(Size) :-
   boardGeneration(Size, Board),
   maplist(portray_clause, Board), nl,
-  skyscraper(Board, Solution),
-  maplist(portray_clause, Solution).
+  Board2 = Board,
+  skyscraper(Board2, Solution),
+  printBoard(Solution, Board).

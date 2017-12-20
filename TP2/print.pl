@@ -2,28 +2,21 @@
 printBoard(Board, [Array1, Array2, Array3, Array4]) :-
   length(Board, Size),
 
-  printBlank(4),
-  put_code(9556), 
-  printTopDivision(Size),
-
-  printBlank(4),
-  put_code(9553),
-  printLine(Array3),
   nl,
 
+  printBlank(5),
+  printArrayLine(Array3),
+  nl,
+
+  printBlank(4),
   put_code(9556),
-  printSecTopDivision(Size),
+  printTopDivision(Size),
 
   printLines(Board, Size, Array1, Array2),
   
-  printBlank(4),
-  put_code(9553),
-  printLine(Array4),
-  nl,
-
-  printBlank(4),
-  put_code(9562),
-  printBottomDivision(Size).
+  printBlank(5),
+  printArrayLine(Array4),
+  nl.
 
 
 printLines([LastLine], Size, [Last1], [Last2]) :-
@@ -31,8 +24,9 @@ printLines([LastLine], Size, [Last1], [Last2]) :-
   printLine(LastLine),
   printRightElem(Last2),
   nl,
+  printBlank(4),
   put_code(9562),
-  printSecBotDivision(Size).
+  printBottomDivision(Size).
 
 printLines([Line | Board], Size, [H1 | T1], [H2 | T2]):-
   printLeftElem(H1),
@@ -40,7 +34,9 @@ printLines([Line | Board], Size, [H1 | T1], [H2 | T2]):-
   printRightElem(H2),
   nl,
 
+  printBlank(4),
   put_code(9568),
+  
   printDivision(Size),
   printLines(Board, Size, T1, T2).
 
@@ -76,7 +72,7 @@ printTopDivision(Size) :-
   NewSize is Size - 1,
   printTopDivision(NewSize).
 
-printDivision(-1):-
+printDivision(1):-
   put_code(9552),
   put_code(9552),
   put_code(9552),
@@ -112,14 +108,12 @@ printBlank(Num) :-
 
 printLeftElem(Elem):-
   nonvar(Elem),
-  put_code(9553),
-  printBlank(1),
+  printBlank(2),
   write(Elem),
   printBlank(1),
   put_code(9553).
 printLeftElem(_):-
-  put_code(9553),
-  printBlank(1),
+  printBlank(2),
   write('_'),
   printBlank(1),
   put_code(9553).
@@ -129,13 +123,11 @@ printRightElem(Elem):-
   nonvar(Elem),
   printBlank(1),
   write(Elem),
-  printBlank(1),
-  put_code(9553).
+  printBlank(2).
 printRightElem(_):-
   printBlank(1),
   write('_'),
-  printBlank(1),
-  put_code(9553).
+  printBlank(2).
 
 
 printSecTopDivision(-1) :-
@@ -165,3 +157,17 @@ printSecBotDivision(Size) :-
   put_code(9580),
   NewSize is Size - 1,
   printSecBotDivision(NewSize).
+
+printArrayLine([]).
+printArrayLine([Elem | Line]) :-
+  nonvar(Elem),
+  printBlank(1),
+  write(Elem),
+  printBlank(2),
+  printArrayLine(Line).
+
+printArrayLine([Elem | Line]) :-
+  printBlank(1),
+  write('_'),
+  printBlank(2),
+  printArrayLine(Line).
