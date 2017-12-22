@@ -131,36 +131,6 @@ printRightElem(_):-
   write('_'),
   printBlank(2).
 
-printSecTopDivision(-1) :-
-  put_code(9552),
-  put_code(9552),
-  put_code(9552),
-  put_code(9559),
-  nl.
-
-printSecTopDivision(Size) :-
-  put_code(9552),
-  put_code(9552),
-  put_code(9552),
-  put_code(9580),
-  NewSize is Size - 1,
-  printSecTopDivision(NewSize).
-
-printSecBotDivision(-1) :-
-  put_code(9552),
-  put_code(9552),
-  put_code(9552),
-  put_code(9565),
-  nl.
-
-printSecBotDivision(Size) :-
-  put_code(9552),
-  put_code(9552),
-  put_code(9552),
-  put_code(9580),
-  NewSize is Size - 1,
-  printSecBotDivision(NewSize).
-
 printArrayLine([]).
 
 printArrayLine([Elem | Line]) :-

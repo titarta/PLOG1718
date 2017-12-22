@@ -3,9 +3,10 @@
 
 :- include('generate.pl').
 :- include('print.pl').
+:- include('test.pl').
 
 getLine(Line, Number) :-
-  all_distinct(Line),
+  %all_distinct(Line),
   getLineSimpleReification(Line, Number, 0).
   %reverse(Line, LineReversed),
   %getLineReification(LineReversed, Number).
@@ -51,10 +52,12 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   length(Down, Length),
   length(Solution, Length),
   maplist(same_length(Solution), Solution),
+  maplist(all_distinct, Solution),
   append(Solution, FlatSolution),  
   domain(FlatSolution, 1, Length),
   getLines(Solution, Left, Right),
   transpose(Solution, TransposedSolution),
+  maplist(all_distinct, TransposedSolution),
   getLines(TransposedSolution, Up, Down),
   statistics(walltime, [T1 | _]),
   labeling([max, bisect, up], FlatSolution),
