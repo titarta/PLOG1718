@@ -66,39 +66,3 @@ skyscraper([Left, Right, Up, Down], Solution) :-
   Time2 is T2 - T1,
   write('C: '), write(Time1), nl,
   write('L: '), write(Time2), nl.
-  
-test1 :-
-  ViewLists = [
-    [_, 2, 3, 4, _, _], 
-    [_, _, 4, 3, 2, _], 
-    [5, _, _, 2, 2, _], 
-    [_, 3, 4, _, _, 4]
-  ],
-  skyscraper(ViewLists, Solution),
-  printBoard(ViewLists, Solution).
-
-test2 :-
-  ViewLists = [
-    [3, 3, _, 3, _, 3, _, _], 
-    [_, _, 2, _, 4, 4, _, 1],
-    [_, _, 5, 3, _, 2, _, 4],
-    [2, 4, _, _, 4, _, _, _]
-  ],
-  Solution = [
-    [_, _, _, 3, _, _, _, _],
-    [_, _, _, _, _, _, 8, 2],
-    [_, _, _, 5, _, _, _, _],
-    [2, _, _, _, _, _, _, _],
-    [_, _, 3, _, _, _, _, _],
-    [1, _, 5, _, _, _, _, _],
-    [_, _, _, 6, _, 2, _, _],
-    [_, _, _, _, _, _, _, _]
-  ],
-  skyscraper(ViewLists, Solution),
-  printBoard(ViewLists, Solution).
-
-generate(Size) :-
-  problemGeneration(Size, ViewLists),
-  maplist(portray_clause, ViewLists), nl,
-  skyscraper(ViewLists, Solution),
-  printBoard(ViewLists, Solution).
