@@ -32,28 +32,58 @@ botTurnLv3(Game, Num, NewGame) :-
 botTurnLv3aux1(Game, Num, NewGame) :-
   nl, write('Player '), write(Num),write(' turn:'),nl,
   getPossiblePlays(Game, Plays),
-  ite(getWinningPlay(Plays, WinningPlay), NewGame = WinningPlay, botTurnLv3Aux2(Plays, NewGame)).
+  ite(getWinningPlay(Plays, WinningPlay), NewGame = WinningPlay, minmax(1, Game, NewGame)).
 
-botTurnLv3Aux2(Plays, GoodPlay) :-
-  restrictToNonLosingGame(Plays, NonLosingPlays),
-  nl, nl, write(NonLosingPlays), nl, nl, write(Plays), nl, nl,
-  ite(getBest(NonLosingPlays, GoodPlay, Value), ! , getListElemAt(0, Plays, GoodPlay)).
+minmax(Depth, Game, NewGame) :-
+  write('entrou'), nl,
+  write(Depth), nl,
+  write(Game), nl,
+  minmaxAux(Depth, max, _, Game, NewGame).
 
-getBest([], _, _) :- !, fail.
+minmaxAux(0, _, Value, Game, Game) :-
+  write('Leaf'), nl,
+  write(Game), nl,
+  noOfNonLosingGames(Game, Value),
+  write('value: '), write(Value), nl, !.
 
-getBest([Test], Test, Value) :-
-  evaluate(Test, Value).
+minmaxAux(Depth, min, Value, Game, NewGame) :-
+  NewDepth is Depth - 1,
+  setof(ValueAux-GameAux, (P^X^Y^movePiece(P, X, Y, Game, Play), minmaxAux(NewDepth, max, ValueAux, Play, GameAux)), Plays),
+  write(Plays), nl,
+  minPlay(Plays, Value, NewGame),
+  write(Value), nl,
+  write(NewGame), nl.
 
-getBest([CurrTest|NextTests], BestPlay, Value) :-
-  getBest(NextTests, NewPlay, NewValue),
-  evaluate(CurrTest, EvaluateValue),
-  write(EvaluateValue), nl, write(NewValue), nl,
-  ite(EvaluateValue > NewValue, write('bigger'), write('smaller')), nl,
-  ite(EvaluateValue > NewValue, BestPlay = CurrTest, BestPlay = NewPlay),
-  ite(EvaluateValue > NewValue, Value is EvaluateValue, Value is NewValue).
+minmaxAux(Depth, max, Value, Game, NewGame) :-
+  NewDepth is Depth - 1,
+  write('depth: '), write(NewDepth), nl,
+  setof(ValueAux-GameAux, (P^X^Y^movePiece(P, X, Y, Game, Play), minmaxAux(NewDepth, min, ValueAux, Play, GameAux)), Plays),
+  write(Plays), nl,
+  maxPlay(Plays, Value, NewGame).
 
-getBest([CurrTest|NextTests], BestPlay, Value) :-
-  getBest(NextTests, BestPlay, Value).
+minPlay(Plays, Value, Play) :-
+  minPlayAux(Plays, 999999, [], Value, Play).
+
+minPlayAux([], Value, Play, Value, Play).
+
+minPlayAux([V-G | T], MinVal, MinGame, Value, Play) :-
+  V < MinVal,
+  minPlayAux(T, V, G, Value, Play).
+
+minPlayAux([V-G | T], MinVal, MinGame, Value, Play) :-
+  minPlayAux(T, MinVal, MinGame, Value, Play).
+
+maxPlay(Plays, Value, Play) :-
+  maxPlayAux(Plays, -999999, [], Value, Play).
+
+maxPlayAux([], Value, Play, Value, Play).
+
+maxPlayAux([V-G | T], MaxVal, MaxGame, Value, Play) :-
+  V < MaxVal,
+  maxPlayAux(T, V, G, Value, Play).
+
+maxPlayAux([V-G | T], MaxVal, MaxGame, Value, Play) :-
+  maxPlayAux(T, MaxVal, MaxGame, Value, Play).
 
 getWinningPlay([], _) :- !, fail.
 getWinningPlay([[H|T]|NextPlays], Game) :-
@@ -65,27 +95,6 @@ nonLosingGame(Game) :-
 
 restrictToNonLosingGame(Plays, NewPlays) :-
   filter(nonLosingGame, Plays, NewPlays).
-
-evaluate(Game, Value) :-
-  write('Start evaluate'), nl,
-  once(getPossiblePlays(Game, EnemyPlaysAll)),
-  once(restrictToNonLosingGame(EnemyPlaysAll, EnemyPlays)),
-  once(getEnemyPlaysValue(EnemyPlays, EnemyPlaysValue)),
-
-  len(EnemyPlaysValue, NumberEnemyPlays),
-  sum_list(EnemyPlaysValue, SumEnemyPlays),
-  write('SumEnemyPlays: '), write(SumEnemyPlays), write('   NumberEnemyPlays: '), write(NumberEnemyPlays), nl,
-  ite(NumberEnemyPlays == 0, Value is 1000, ite(SumEnemyPlays == 0, Value is -1, Value is SumEnemyPlays / NumberEnemyPlays - NumberEnemyPlays * 10)),
-  write('Value: '), write(Value), nl,
-  write('End evaluate'), nl.
-
-evaluate(_, -1) :- write('Failed, -1'), nl.
-
-getEnemyPlaysValue([EnemyPlay],[ValueOfPlay]) :-
-  noOfNonLosingGames(EnemyPlay, ValueOfPlay).
-getEnemyPlaysValue([EnemyPlay|EnemyPlays], [ValueOfPlay|ValueOfOtherPlays]) :-
-  noOfNonLosingGames(EnemyPlay, ValueOfPlay),
-  getEnemyPlaysValue(EnemyPlays, ValueOfOtherPlays).
 
 noOfNonLosingGames(Game, Number) :-
   getPossiblePlays(Game, PlaysAll),
