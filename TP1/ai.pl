@@ -32,13 +32,72 @@ botTurnLv3(Game, Num, NewGame) :-
 botTurnLv3aux1(Game, Num, NewGame) :-
   nl, write('Player '), write(Num),write(' turn:'),nl,
   getPossiblePlays(Game, Plays),
-  ite(getWinningPlay(Plays, WinningPlay), NewGame = WinningPlay, minmax(1, Game, NewGame)).
+  ite(getWinningPlay(Plays, WinningPlay), NewGame = WinningPlay, minmax(2, Game, NewGame)),!.
 
 minmax(Depth, Game, NewGame) :-
-  write('entrou'), nl,
-  write(Depth), nl,
-  write(Game), nl,
-  minmaxAux(Depth, max, _, Game, NewGame).
+  minmaxAux2(Depth, max, _, Game, NewGame).
+
+
+
+minmaxAux2(0, _, Value, Game, Game) :-
+  noOfNonLosingGames(Game, Value).
+
+minmaxAux2(Depth, CycleValue, Value, Game, NewGame) :-
+  NewDepth is Depth - 1,
+  getPossiblePlays(Game, Plays1),
+  restrictToNonLosingGame(Plays1, Plays),
+  best(NewDepth, Plays, NewGame, CycleValue, Value),!.
+
+best(Depth, [Play], Game, max, Value) :-
+  minmaxAux2(Depth, min, Value, Play, Game),!.
+
+best(Depth, [Play], Game, min, Value) :-
+  minmaxAux2(Depth, max, Value, Play, Game),!.
+
+
+best(Depth, [Play | Plays], Game, max, BestValue) :-
+  minmaxAux2(Depth, min, Value1, Play, Game1),
+  best(Depth, Plays, Game2, max, Value2),
+  betterOf(max, Game1, Game2, Value1, Value2, Game, BestValue).
+
+best(Depth, [Play | Plays], Game, min, BestValue) :-
+  minmaxAux2(Depth, max, Value1, Play, Game1),
+  best(Depth, Plays, Game2, min, Value2),
+  betterOf(min, Game1, Game2, Value1, Value2, Game, BestValue).
+
+
+
+betterOf(max, Game1, _, Value1, Value2, Game1, Value1) :-
+  Value1 < Value2, !.
+
+betterOf(min, Game1, _, Value1, Value2, Game1, Value1) :-
+  Value1 > Value2, !.
+
+betterOf(_, _, Game2, _, Value2, Game2, Value2).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 minmaxAux(0, _, Value, Game, Game) :-
   write('Leaf'), nl,
@@ -52,14 +111,14 @@ minmaxAux(Depth, min, Value, Game, NewGame) :-
   write(Plays), nl,
   minPlay(Plays, Value, NewGame),
   write(Value), nl,
-  write(NewGame), nl.
+  write(NewGame), nl,!.
 
 minmaxAux(Depth, max, Value, Game, NewGame) :-
   NewDepth is Depth - 1,
   write('depth: '), write(NewDepth), nl,
   setof(ValueAux-GameAux, (P^X^Y^movePiece(P, X, Y, Game, Play), minmaxAux(NewDepth, min, ValueAux, Play, GameAux)), Plays),
   write(Plays), nl,
-  maxPlay(Plays, Value, NewGame).
+  maxPlay(Plays, Value, NewGame),!.
 
 minPlay(Plays, Value, Play) :-
   minPlayAux(Plays, 999999, [], Value, Play).
